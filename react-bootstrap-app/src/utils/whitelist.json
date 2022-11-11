@@ -1,0 +1,24 @@
+{
+  "Whitelist": [
+    {
+      "uuid": "00000000000000000000000",
+      "email": "kaldolmar.owass@gmail.com",
+      "admin": true
+    },
+    {
+      "uuid": "00000000000000000000001",
+      "email": "potatis.wass.gmail.com",
+      "admin": false
+    },
+    {
+      "uuid": "00000000000000000000002",
+      "email": "viclon-8@student.ltu.se",
+      "admin": false
+    },
+    {
+      "uuid": "00000000000000000000003",
+      "email": "asdasdasd-8@student.ltu.se",
+      "admin": false
+    }
+  ]
+}

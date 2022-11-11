@@ -1,0 +1,17 @@
+#signInDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
+#Profile {
+    border-radius: 50%;
+    width: 50%;
+}
+
+#react-switch {
+    vertical-align: middle;
+    margin-left: 4px;
+  }
