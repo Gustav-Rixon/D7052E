@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import data from "../utils/whitelist.json";
+import data from "../data/whitelist.json";
 
 class WhiteListContent extends Component {
   render() {

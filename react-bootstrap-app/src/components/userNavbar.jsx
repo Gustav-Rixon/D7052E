@@ -3,17 +3,17 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 
-function UserNavBar({ handleSingOut, picture, given_name, family_name }) {
+function UserNavBar({ handleSingOut, objectVals }) {
   return (
     <div id="navbar">
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">
-            <img id="Profile" src={picture} alt="Home" />{" "}
+          <Navbar.Brand href="#">
+            <img id="Profile" src={objectVals[0]} alt="Home" />{" "}
           </Navbar.Brand>
           <Nav className="me-auto">
             <Navbar.Brand>
-              {given_name} {family_name}
+              {objectVals[1]} {objectVals[2]}
             </Navbar.Brand>
           </Nav>
           <Button onClick={handleSingOut} variant="outline-success">
