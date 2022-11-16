@@ -15,7 +15,7 @@ import UserNavBar from "../components/userNavbar";
 import WhiteListContent from "../components/whiteListContent";
 import GoogleAuth from "../components/googleAuth";
 
-export default function App({ useObject }) {
+export default function Home() {
   const [user, setUser] = useState({});
 
   function handleCallbackResponse(response, error) {
@@ -36,9 +36,11 @@ export default function App({ useObject }) {
 
     setUser(useObject);
 
-    console.log("Error: " + error);
-    console.log("Encoded JWT ID token: " + response);
-    console.log("Credentials: " + response.credential);
+    console.log("Error: ");
+    console.log(error);
+    console.log("Encoded JWT ID token: ");
+    console.log(response);
+    console.log("decoded jwt credentials: ");
     console.log(useObject);
   }
 
@@ -76,7 +78,7 @@ export default function App({ useObject }) {
       {user.email_verified && (
         <UserNavBar
           handleSingOut={handleSingOut}
-          objectVals={[user.picture, user.given_name, user.family_name]}
+          objectValList={[user.picture, user.given_name, user.family_name]}
         />
       )}
 
