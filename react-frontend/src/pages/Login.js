@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import jwt_decode from "jwt-decode";
 
 import "../styles/app.css";
+import { setCookie } from "../utils/cookies";
 
 export default function Login() {
   // State for users callback response values from google oAuth 2.0
@@ -13,8 +14,8 @@ export default function Login() {
   //Decodes the response from google oAuth 2.0 and decodes it.
   function handleCallbackResponse(response, error) {
     var useObject = jwt_decode(response.credential);
-    //document.getElementById("signInDiv").hidden = true;
     setUser(useObject);
+    setCookie("jwt_cookie", response.credential, 1);
 
     console.log("Error: ");
     console.log(error);
@@ -41,17 +42,14 @@ export default function Login() {
         size: "large",
       });
     }
+    // eslint-disable-next-line
   }, [divRef.current]);
 
   function LoggedIn() {
     // check whitelist (api towards flask, user.email)
     // send JWT token || access token.
     // rederict to homepage
-
-    // Authenticate the user towards the whitelist on the backend (flask)
-    // send to new page (home)
-    //
-    window.location.replace("http://localhost:3000/apa");
+    window.location.replace("http://localhost:3000/test");
   }
 
   return (

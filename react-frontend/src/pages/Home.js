@@ -1,12 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import UserNavBar from "../components/userNavbar";
+import { getCookie, setCookie } from "../utils/cookies";
+// Json encoding
+import jwt_decode from "jwt-decode";
+
+function handleSignOut() {
+  setCookie("jwt_cookie", {}, 1);
+  window.location.replace("http://localhost:3000");
+}
 
 export default function Home() {
+  // temp solv
+  var obj = getCookie("jwt_cookie");
+  var useObject;
+  try {
+    useObject = jwt_decode(obj);
+  } catch (error) {
+    useObject = false;
+    console.log(error);
+  }
+  console.log(useObject);
+
   return (
     <>
-      <div className="App">
-        <h1> Tja </h1>
-      </div>
+      {!useObject && handleSignOut()}
+      {useObject.email_verified && (
+        <div className="App">
+          <UserNavBar
+            handleSingOut={handleSignOut}
+            objectValList={[
+              useObject.picture,
+              useObject.given_name,
+              useObject.family_name,
+            ]}
+          />
+        </div>
+      )}
     </>
   );
 }

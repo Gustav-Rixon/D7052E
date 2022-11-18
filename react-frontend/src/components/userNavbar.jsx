@@ -12,7 +12,7 @@ function UserNavBar({ handleSingOut, objectValList }) {
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
           <Navbar.Brand>
-            <Link to="/">
+            <Link to="/test">
               <img id="Profile" src={objectValList[0]} alt="Home" />
             </Link>
           </Navbar.Brand>
@@ -21,7 +21,6 @@ function UserNavBar({ handleSingOut, objectValList }) {
               {objectValList[1]} {objectValList[2]}
             </Navbar.Brand>
           </Nav>
-
           <Button onClick={handleSingOut} variant="outline-success">
             Logout
           </Button>
