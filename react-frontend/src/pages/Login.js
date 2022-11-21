@@ -49,8 +49,10 @@ export default function Login() {
     // check whitelist (api towards flask, user.email)
     // send JWT token || access token.
     // rederict to homepage
-    window.location.replace("http://localhost:3000/test");
+    window.location.replace("http://localhost:3000/home");
   }
+
+  console.log(process.env);
 
   return (
     <div className="App">

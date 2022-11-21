@@ -5,14 +5,13 @@ import Button from "react-bootstrap/Button";
 
 import { Link } from "react-router-dom";
 
-
 function UserNavBar({ handleSingOut, objectValList }) {
   return (
     <div id="navbar">
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>
           <Navbar.Brand>
-            <Link to="/test">
+            <Link to="/home">
               <img id="Profile" src={objectValList[0]} alt="Home" />
             </Link>
           </Navbar.Brand>
@@ -21,7 +20,7 @@ function UserNavBar({ handleSingOut, objectValList }) {
               {objectValList[1]} {objectValList[2]}
             </Navbar.Brand>
           </Nav>
-          <Button onClick={handleSingOut} variant="outline-success">
+          <Button onClick={handleSingOut} variant="success">
             Logout
           </Button>
         </Container>
