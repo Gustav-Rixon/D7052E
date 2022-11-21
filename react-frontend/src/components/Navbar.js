@@ -17,7 +17,7 @@ function UserNavBar({ handleSingOut, objectValList }) {
             </Link>
           </Navbar.Brand>
           <Nav className="me-auto">
-            <Navbar.Brand>
+            <Navbar.Brand alt="Alejandro Despasito">
               {objectValList[1]} {objectValList[2]}
             </Navbar.Brand>
           </Nav>

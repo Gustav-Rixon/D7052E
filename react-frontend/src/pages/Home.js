@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import UserNavBar from "../components/userNavbar";
+import UserNavBar from "../components/Navbar";
 import { getCookie, setCookie } from "../utils/cookies";
 // Json encoding
 import jwt_decode from "jwt-decode";
@@ -26,7 +26,7 @@ export default function Home() {
     <>
       {!useObject && handleSignOut()}
       {useObject.email_verified && (
-        <div className="App">
+        <div className="">
           <UserNavBar
             handleSingOut={handleSignOut}
             objectValList={[
