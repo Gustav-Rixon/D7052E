@@ -3,11 +3,11 @@
 # https://superuser.com/questions/370575/how-to-run-make-file-from-any-directory
 
 build:
-	cd react-frontend/ && npm install
+	cd frontend/ && npm install
 
 start:
-	cd react-frontend/ && npm run start
+	cd frontend/ && npm run start
 
 stop:
-	cd react-frontend/ && npm run stop
+	cd frontend/ && npm run stop
 
