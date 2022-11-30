@@ -1,6 +1,6 @@
 import time
 import camera
-#import mail
+import mail
 import threading
 import sensor
 
@@ -14,7 +14,7 @@ class Main:
         self.camera_main = camera.Camera()
         
         # Email client
-    #    self.mail_main = mail.Email()
+        self.mail_main = mail.Email()
     
     def start(self):
         print("starting...")
@@ -23,6 +23,9 @@ class Main:
                 self.sensor_main.stale()
             elif(self.sensor_main.getvalue() == 1):
                 self.camera_main.record()
+                mail_thread = threading.Thread(target=self.mail_main.alert, args=())
+                # Check status if home or not
+                is_home = self.mail_main.check()
                 self.sensor_main.motion()
                 
 """""
