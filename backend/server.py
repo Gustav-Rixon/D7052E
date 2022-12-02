@@ -1,8 +1,9 @@
 #OBS THIS IS HARDCODES FOR 192.168.1.2
-#TODO I CANT CTRL C THE PROGRAM PLS HELP
 import socket, cv2, pickle, struct
-import threading
 import cv2
+from flask import Flask, render_template, Response
+
+app = Flask(__name__)
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 host_name  = socket.gethostname()
@@ -34,20 +35,29 @@ def show_client(addr,client_socket):
 				frame_data = data[:msg_size]
 				data  = data[msg_size:]
 				frame = pickle.loads(frame_data)
-				cv2.imshow(f"FROM {addr}",frame)
-				key = cv2.waitKey(1) & 0xFF
-				if key  == ord('q'):
-					break
-			client_socket.close()
+				_, buffer = cv2.imencode('.jpg', frame)
+				frame = buffer.tobytes()
+				yield (b'--frame\r\n'
+                	b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+			#client_socket.close()
 	except Exception as e:
 		print(f"CLINET {addr} DISCONNECTED")
 		pass
-		
-while True:
-	client_socket,addr = server_socket.accept()
-	thread = threading.Thread(target=show_client, args=(addr,client_socket))
-	thread.start()
-	print("TOTAL CLIENTS ",threading.active_count() - 1)
-	
-				
 
+
+@app.route('/video_feed/<string:id>/', methods=["GET"])
+def video_feed(id):
+    print(id)
+    client_socket,addr = server_socket.accept()
+    """Video streaming route."""
+    return Response(show_client(addr,client_socket),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route('/', methods=["GET"])
+def index():
+    return render_template('index.html')
+
+
+if __name__ == '__main__':
+    app.run()
