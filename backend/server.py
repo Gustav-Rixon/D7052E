@@ -1,31 +1,64 @@
-import io
-import socket
-import struct
-from PIL import Image
+#OBS THIS IS HARDCODES FOR 192.168.1.2
+import socket, cv2, pickle, struct
 import cv2
-import numpy
-import sys
+from flask import Flask, render_template, Response
 
-server_socket = socket.socket()
-server_socket.bind((sys.argv[1], int(sys.argv[2])))  
-server_socket.listen(0)
-print("Listening")
-connection = server_socket.accept()[0].makefile('rb')
-try:
-    img = None
-    while True:
-        image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
-        if not image_len:
-            break
-        image_stream = io.BytesIO()
-        image_stream.write(connection.read(image_len))
-        image_stream.seek(0)
-        image = Image.open(image_stream)
-        im = cv2.cvtColor(numpy.array(image), cv2.COLOR_RGB2BGR)
-        cv2.imshow('Video',im)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-           break
-    cv2.destroyAllWindows()
-finally:
-    connection.close()
-    server_socket.close()
+app = Flask(__name__)
+
+server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+host_name  = socket.gethostname()
+host_ip = '192.168.1.2'
+print('HOST IP:',"host_ip")
+port = 8080
+socket_address = (host_ip,port)
+server_socket.bind(socket_address)
+server_socket.listen()
+print("Listening at",socket_address)
+
+def show_client(addr,client_socket):
+	try:
+		print('CLIENT {} CONNECTED!'.format(addr))
+		if client_socket: # if a client socket exists
+			data = b""
+			payload_size = struct.calcsize("Q")
+			while True:
+				while len(data) < payload_size:
+					packet = client_socket.recv(4*1024) # 4K
+					if not packet: break
+					data+=packet
+				packed_msg_size = data[:payload_size]
+				data = data[payload_size:]
+				msg_size = struct.unpack("Q",packed_msg_size)[0]
+				
+				while len(data) < msg_size:
+					data += client_socket.recv(4*1024)
+				frame_data = data[:msg_size]
+				data  = data[msg_size:]
+				frame = pickle.loads(frame_data)
+				_, buffer = cv2.imencode('.jpg', frame)
+				frame = buffer.tobytes()
+				yield (b'--frame\r\n'
+                	b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+			#client_socket.close()
+	except Exception as e:
+		print(f"CLINET {addr} DISCONNECTED")
+		pass
+
+
+@app.route('/video_feed/<string:id>/', methods=["GET"])
+def video_feed(id):
+    print(id)
+    client_socket,addr = server_socket.accept()
+    """Video streaming route."""
+    return Response(show_client(addr,client_socket),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route('/', methods=["GET"])
+def index():
+    return render_template('index.html')
+
+
+if __name__ == '__main__':
+    app.run()
+
