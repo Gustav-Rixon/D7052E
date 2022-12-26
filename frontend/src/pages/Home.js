@@ -35,6 +35,19 @@ export default function Home() {
               useObject.family_name,
             ]}
           />
+          <div class="col-lg-7">
+            <h3 class="mt-5">Multiple Live Streaming</h3>
+            <img
+              src="{{ url_for('video_feed', id='0') }}"
+              width="100%"
+              alt=" camera 1"
+            />
+            <img
+              src="{{ url_for('video_feed', id='1') }}"
+              width="100%"
+              alt=" camera 2"
+            />
+          </div>
         </div>
       )}
     </>
