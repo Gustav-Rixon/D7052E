@@ -1,0 +1,30 @@
+{
+    "Whitelist": [
+      {
+        "comment": "TODO REMOVE  THIS LINE Logga in, Logga Ut, Registerars, Tas bort, Admin, Inte Admin",
+        "uuid": "00000000000000000000000",
+        "email": "kaldolmar.owass@gmail.com",
+        "admin": true,
+        "jwt": ""
+      },
+      {
+        "uuid": "00000000000000000000001",
+        "email": "potatis.wass.gmail.com",
+        "admin": false,
+        "jwt": ""
+      },
+      {
+        "uuid": "00000000000000000000002",
+        "email": "viclon-8@student.ltu.se",
+        "admin": false,
+        "jwt": ""
+      },
+      {
+        "uuid": "00000000000000000000003",
+        "email": "asdasdasd-8@student.ltu.se",
+        "admin": false,
+        "jwt": ""
+        
+      }
+    ]
+  }
