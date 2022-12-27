@@ -5,7 +5,7 @@ if camera == True:
 else:
     exit() #Should do som error handeling
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-host_ip = '192.168.1.2'
+host_ip = '192.168.87.255'
 
 port = 8080
 client_socket.connect((host_ip,port))

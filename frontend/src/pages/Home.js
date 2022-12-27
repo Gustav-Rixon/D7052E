@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserNavBar from "../components/Navbar";
 import { getCookie, setCookie } from "../utils/cookies";
 // Json encoding
 import jwt_decode from "jwt-decode";
+import Whitelist from "../components/Whitelist";
 
 function handleSignOut() {
   setCookie("jwt_cookie", {}, 1);
@@ -11,7 +12,12 @@ function handleSignOut() {
 }
 
 export default function Home() {
-  // temp solv
+  const [visible, setVisible] = useState(false);
+
+  function toggleVisibility() {
+    setVisible((prevVisible) => !prevVisible);
+  }
+
   var obj = getCookie("jwt_cookie");
   var useObject;
   try {
@@ -21,6 +27,8 @@ export default function Home() {
     console.log(error);
   }
   console.log(useObject);
+
+  console.log(visible);
 
   return (
     <>
@@ -34,7 +42,13 @@ export default function Home() {
               useObject.given_name,
               useObject.family_name,
             ]}
+            onToggle={toggleVisibility}
           />
+          {visible && (
+            <aside>
+              <Whitelist />
+            </aside>
+          )}
           <div class="col-lg-7">
             <h3 class="mt-5">Multiple Live Streaming</h3>
             <img
@@ -48,6 +62,7 @@ export default function Home() {
               alt=" camera 2"
             />
           </div>
+          <img src="{{ url_for('video_feed', id='1') }}" width="100%" alt="" />
         </div>
       )}
     </>

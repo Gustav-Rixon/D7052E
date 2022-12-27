@@ -1,13 +1,12 @@
 #OBS THIS IS HARDCODES FOR 192.168.1.2
 import socket, cv2, pickle, struct
-import cv2
 from flask import Flask, render_template, Response
 
 app = Flask(__name__)
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 host_name  = socket.gethostname()
-host_ip = '192.168.1.2'
+host_ip = '192.168.87.255'
 print('HOST IP:',"host_ip")
 port = 8080
 socket_address = (host_ip,port)

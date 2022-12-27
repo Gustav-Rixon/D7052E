@@ -11,3 +11,6 @@ start:
 stop:
 	cd frontend/ && npm run stop
 
+flask:
+	cd backend/flask/ && python3 app.py
+

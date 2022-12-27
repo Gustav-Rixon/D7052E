@@ -61,7 +61,8 @@ export default function Login() {
           <div ref={divRef} />
         </center>
       </div>
-
+      {!process.env.REACT_APP_CLIENT_ID &&
+        alert("Missing or Invalid Google OAuth 2 Key")}
       {user.email_verified && LoggedIn()}
     </div>
   );
