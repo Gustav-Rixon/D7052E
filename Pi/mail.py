@@ -1,4 +1,3 @@
-#nästan 100% taget från victors gamla project
 # Imports
 import code
 import email
@@ -15,13 +14,14 @@ load_dotenv()
 
 EMAIL_USERNAME = os.getenv('EMAIL_USERNAME')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+FILE_PATH = os.getenv('FILE_PATH')
 #add your mail adress
 Sender_Email = EMAIL_USERNAME
 Reciever_Email = EMAIL_USERNAME
 Password = EMAIL_PASSWORD
 
 # Raspberry Pi
-imagePath = '/home/edison/Videos/security'
+imagePath = FILE_PATH
 
 
 class Email:
