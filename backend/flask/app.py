@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 from flask_cors import CORS
-import json, jwt, os
-
+import uuid
+import json
+import jwt
+import os
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://localhost:5000/*'])
@@ -15,7 +17,13 @@ secret_key = os.getenv('SECRET_KEY')
 print(secret_key)
 
 
-
+"""
+/whitelist
+Returns the part of the contents within whitelist.json
+email: string
+owner: bool
+admin: bool
+"""
 @app.route('/whitelist')
 def get_whitelist():
     with open('whitelist.json', 'r') as f:
@@ -33,6 +41,13 @@ def get_whitelist():
     return jsonify(filtered_whitelist)
 
 
+""" 
+/whitelist/add
+Adds a user
+a Owner can add another owner and add new admins & new users.
+A Admin can add new users
+A user cannot add new people.
+"""
 @app.route('/whitelist/add', methods=['POST'])
 def add_user_to_whitelist():
     # Read the contents of the whitelist file
@@ -40,12 +55,40 @@ def add_user_to_whitelist():
         whitelist = json.load(f)
 
     # Get the new user data from the request body
-    new_user = request.get_json()
+    data = request.get_json()
+    new_user = data[0]
+    current_user = data[1]
 
-    # Check if the email is already in the Whitelist array
+    # Add a UUID to the new_user variable
+    new_user['uuid'] = str(uuid.uuid4())
+
+    # Add the jwt variable to the new_user dictionary
+    new_user['jwt'] = ""
+
+    # Check if the current user is in the Whitelist array
+    current_user_found = False
+    for user in whitelist['Whitelist']:
+        if user['email'] == current_user['email']:
+            current_user_found = True
+            break
+    if not current_user_found:
+        return 'Current user not found', 404
+
+    # Check if the new user is already in the Whitelist array
     for user in whitelist['Whitelist']:
         if user['email'] == new_user['email']:
             return 'Email already exists', 400
+
+    if new_user['owner']:
+        if current_user['owner']:
+            pass  # Owners can add other owners
+        else:
+            return 'Invalid Permissions', 400
+    if new_user['admin']:
+        if current_user['owner'] or current_user['admin']:
+            pass  # Owners and admins can add new admins
+        else:
+            return 'Invalid Permissions', 400
 
     # Add the new user to the Whitelist array
     whitelist['Whitelist'].append(new_user)
@@ -55,6 +98,8 @@ def add_user_to_whitelist():
         json.dump(whitelist, f)
 
     return 'Success'
+
+
 
 @app.route('/whitelist/remove', methods=['POST'])
 def remove_user_from_whitelist():
@@ -166,8 +211,6 @@ def demote_admin_to_user():
     return 'Success'
 
 
-
-
 @app.route('/test/edit_json', methods=['POST'])
 def edit_json():
 
@@ -186,7 +229,6 @@ def edit_json():
     else:
         # The JWT is valid
         print("The JWT is valid")
-
 
     # The decoded token is a dictionary containing the claims of the JWT
     print(decoded_token)
@@ -210,15 +252,12 @@ def edit_json():
     # Modify the JSON data
     json_data['key'] = data['new_value']
 
-
     # Sending modified data back to the frontend
     with open('whitelist.json', 'w') as f:
         json.dump(json_data, f)
 
-    
     return 'Json file successfully edited!'
 
 
 if __name__ == '__main__':
     app.run()
-

@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function UserNavBar({ handleSingOut, objectValList, onToggle }) {
+  const [active, setActive] = useState(false);
+
+  const handleClick = () => {
+    onToggle();
+    setActive((prevActive) => !prevActive);
+  };
+
   return (
     <div id="navbar">
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -17,7 +24,11 @@ function UserNavBar({ handleSingOut, objectValList, onToggle }) {
               {objectValList[1]} {objectValList[2]}
             </Navbar.Brand>
           </Nav>
-          <Button onClick={onToggle} variant="success">
+          <Button
+            onClick={handleClick}
+            variant={active ? "primary" : "outline-success"}
+            className="mx-2"
+          >
             Whitelist
           </Button>
           <Button onClick={handleSingOut} variant="success">

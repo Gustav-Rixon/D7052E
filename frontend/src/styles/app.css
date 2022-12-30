@@ -1,12 +1,87 @@
 #signInDiv {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
 }
 
 #Profile {
-    border-radius: 50%;
-    width: 50%;
+  border-radius: 50%;
+  width: 50%;
+}
+
+.whitelist {
+  width: fit-content;
+}
+
+.whitelistH3 {
+  text-align: center;
+}
+
+.scrollable {
+  height: 450px;
+  overflow-y: scroll;
+  border: 2px solid #ccc;
+  padding: 18px;
+}
+
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+.page-container {
+  padding: 30px 30px 30px;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+footer p {
+  margin: 0;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+#outer-div {
+  width: 100%;
+  text-align: center;
+  background-color: #0666a3;
+}
+
+#inner-div {
+  display: inline-block;
+  margin: 0 auto;
+  padding: 3px;
+  background-color: #8ebf42;
+}
+
+aside {
+    display: flex;
+    align-items: center;
+  }
+
+.addUser {
+  padding: 15px;
+  border: 2px solid #ccc;
+}
+
+.removeUser {
+  padding-top: 15px;
 }

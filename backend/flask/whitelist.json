@@ -1,32 +1,26 @@
 {
     "Whitelist": [
       {
-        "uuid": "00000000000000000000000",
-        "email": "kaldolmar.owass@gmail.com",
-        "owner": true,
-        "admin": true,
-        "jwt": ""
-      },
-      {
-        "uuid": "00000000000000000000001",
-        "email": "potatis.wass.gmail.com",
+        "email": "victor.longberg@gmail.com",
         "owner": false,
-        "admin": false,
+        "admin": true,
+        "uuid": "e1ddcc80-35d8-45bf-bc6c-cb331f5f43b8",
         "jwt": ""
       },
       {
-        "uuid": "00000000000000000000002",
+        "email": "kaldolmar.owass@gmail.com",
+        "owner": false,
+        "admin": true,
+        "uuid": "e1ddcc80-35d8-45bf-bc6c-cb331f5f43b8",
+        "jwt": ""
+      },
+      {
         "email": "viclon-8@student.ltu.se",
         "owner": false,
-        "admin": false,
-        "jwt": ""
-      },
-      {
-        "uuid": "00000000000000000000003",
-        "email": "asdasdasd-8@student.ltu.se",
-        "owner": false,
-        "admin": false,
+        "admin": true,
+        "uuid": "a375d950-534d-4e74-b174-90b11c2e6cfd",
         "jwt": ""
       }
     ]
   }
+  

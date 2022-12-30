@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserNavBar from "../components/Navbar";
 import { getCookie, setCookie } from "../utils/cookies";
-// Json encoding
 import jwt_decode from "jwt-decode";
 import Whitelist from "../components/Whitelist";
+import Footer from "../components/Footer";
+import AddUserForm from "../components/AddUser";
+import Camera from "../components/Camera";
 
 function handleSignOut() {
-  setCookie("jwt_cookie", {}, 1);
+  setCookie("jwt_cookie", "", 1);
   window.location.replace("http://localhost:3000");
+}
+
+// Load cookie value.
+const obj = getCookie("jwt_cookie");
+let useObject;
+try {
+  useObject = jwt_decode(obj);
+} catch (error) {
+  useObject = false;
+  console.log(error);
 }
 
 export default function Home() {
@@ -18,21 +30,41 @@ export default function Home() {
     setVisible((prevVisible) => !prevVisible);
   }
 
-  var obj = getCookie("jwt_cookie");
-  var useObject;
-  try {
-    useObject = jwt_decode(obj);
-  } catch (error) {
-    useObject = false;
-    console.log(error);
-  }
-  console.log(useObject);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("/whitelist");
+        const json = await response.json();
+        setData(json);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  console.log(visible);
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    return <p>An error occurred: {error.message}</p>;
+  }
+
+  //console.log(useObject);
+  //console.log(visible);
 
   return (
     <>
-      {!useObject && handleSignOut()}
+      {
+        !useObject &&
+          handleSignOut() /* checks if you have a jwt token, if not you get sent back to localhost/3000 */
+      }
       {useObject.email_verified && (
         <div className="">
           <UserNavBar
@@ -44,25 +76,18 @@ export default function Home() {
             ]}
             onToggle={toggleVisibility}
           />
-          {visible && (
-            <aside>
-              <Whitelist />
-            </aside>
-          )}
-          <div class="col-lg-7">
-            <h3 class="mt-5">Multiple Live Streaming</h3>
-            <img
-              src="{{ url_for('video_feed', id='0') }}"
-              width="100%"
-              alt=" camera 1"
-            />
-            <img
-              src="{{ url_for('video_feed', id='1') }}"
-              width="100%"
-              alt=" camera 2"
-            />
+          <div className="page-container">
+            {!visible && (
+              <>
+                <aside>
+                  <Whitelist data={data} />
+                  <AddUserForm currentuser={useObject.email} />
+                </aside>
+              </>
+            )}
           </div>
-          <img src="{{ url_for('video_feed', id='1') }}" width="100%" alt="" />
+          <Camera />
+          <Footer />
         </div>
       )}
     </>
