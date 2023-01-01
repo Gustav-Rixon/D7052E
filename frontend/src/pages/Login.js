@@ -10,11 +10,14 @@ import { setCookie } from "../utils/cookies";
 export default function Login() {
   // State for users callback response values from google oAuth 2.0
   const [user, setUser] = useState({});
+  const [jwt, setWEBJWT] = useState("");
 
   //Decodes the response from google oAuth 2.0 and decodes it.
   function handleCallbackResponse(response, error) {
     var useObject = jwt_decode(response.credential);
     setUser(useObject);
+    setWEBJWT(response.credential);
+
     setCookie("jwt_cookie", response.credential, 1);
 
     console.log("Error: ");
@@ -45,10 +48,25 @@ export default function Login() {
     // eslint-disable-next-line
   }, [divRef.current]);
 
-  function LoggedIn() {
-    // check whitelist (api towards flask, user.email)
-    // send JWT token || access token.
-    // rederict to homepage
+  async function LoggedIn() {
+    async function setJWT() {
+      try {
+        const response = await fetch("/set_jwt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jwt: jwt,
+            email: user.email,
+          }),
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    await setJWT();
     window.location.replace("http://localhost:3000/home");
   }
 

@@ -10,7 +10,7 @@ try {
   useObject = jwt_decode(obj);
 } catch (error) {
   useObject = false;
-  console.error(error);
+  console.log(error);
 }
 
 const addUserToWhitelist = async (newUser) => {
@@ -22,13 +22,6 @@ const addUserToWhitelist = async (newUser) => {
     body: JSON.stringify([newUser, { email: useObject.email }]),
   });
 
-  //const result = response.json(); // await kekw
-  console.log("***************************************************");
-  console.log(response);
-  console.log(response.ok);
-  //console.log(result);
-  console.log("***************************************************");
-
   if (response.ok) {
     window.alert("User added to whitelist successfully");
     return response;
@@ -39,7 +32,7 @@ const addUserToWhitelist = async (newUser) => {
 };
 
 const AddUserForm = () => {
-  const [emailAdd, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [admin, setAdmin] = useState(false);
   const [owner, setOwner] = useState(false);
 
@@ -48,7 +41,7 @@ const AddUserForm = () => {
     try {
       // Create the new user object with the form data
       const newUser = {
-        email: emailAdd,
+        email: email,
         admin: admin,
         owner: owner,
       };
@@ -62,37 +55,53 @@ const AddUserForm = () => {
 
   return (
     <>
-      <div className="addUser">
-        <h3> Add User</h3>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={emailAdd}
-            required
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <br />
-          <label htmlFor="admin">Admin:</label>
-          <input
-            type="checkbox"
-            id="admin"
-            checked={admin}
-            onChange={(event) => setAdmin(event.target.checked)}
-          />
-          <br />
-          <label htmlFor="owner">Owner:</label>
-          <input
-            type="checkbox"
-            id="owner"
-            alt=""
-            checked={owner}
-            onChange={(event) => setOwner(event.target.checked)}
-          />
-          <br />
-          <button type="submit">Add User</button>
-        </form>
+      <div className="apicontent">
+        <h3 className="apicontenth3">Add User</h3>
+        <div className="adduser">
+          <form onSubmit={handleSubmit} className="mb-3">
+            <div className="form-group">
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                required
+                onChange={(event) => setEmail(event.target.value)}
+                className="form-control"
+              />
+            </div>
+            <div className="form-group">
+              <div className="form-check form-check-inline">
+                <input
+                  type="checkbox"
+                  id="admin"
+                  checked={admin}
+                  onChange={(event) => setAdmin(event.target.checked)}
+                  className="form-check-input"
+                />
+                <label htmlFor="admin" className="form-check-label">
+                  Admin
+                </label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  type="checkbox"
+                  id="owner"
+                  alt=""
+                  checked={owner}
+                  onChange={(event) => setOwner(event.target.checked)}
+                  className="form-check-input"
+                />
+                <label htmlFor="owner" className="form-check-label">
+                  Owner
+                </label>
+              </div>
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Add User
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

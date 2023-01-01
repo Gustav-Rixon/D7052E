@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/app.css";
 
 const Whitelist = ({ data }) => {
@@ -7,8 +8,8 @@ const Whitelist = ({ data }) => {
         <p>No data to display</p>
       ) : (
         <>
-          <div className="whitelist">
-            <h3 className="whitelistH3">Whitelist</h3>
+          <div className="apicontent">
+            <h3 className="apicontenth3">Whitelist</h3>
             <div className="scrollable">
               <ul>
                 {data.map((item) => (

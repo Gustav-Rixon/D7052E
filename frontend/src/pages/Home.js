@@ -7,6 +7,7 @@ import Whitelist from "../components/Whitelist";
 import Footer from "../components/Footer";
 import AddUserForm from "../components/AddUser";
 import Camera from "../components/Camera";
+import RemoveUserForm from "../components/RemoveUser";
 
 function handleSignOut() {
   setCookie("jwt_cookie", "", 1);
@@ -25,14 +26,35 @@ try {
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [jwt_api, setJWT] = useState(true);
 
   function toggleVisibility() {
     setVisible((prevVisible) => !prevVisible);
   }
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // JWT
+  useEffect(() => {
+    async function fetchJWT() {
+      try {
+        const response = await fetch("/get_jwt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: useObject.email }),
+        });
+        const data = await response.json();
+        setJWT(data.jwt);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    fetchJWT();
+  }, []);
+
+  //Whitelist
   useEffect(() => {
     async function fetchData() {
       try {
@@ -56,8 +78,9 @@ export default function Home() {
     return <p>An error occurred: {error.message}</p>;
   }
 
-  //console.log(useObject);
-  //console.log(visible);
+  if (jwt_api !== obj) {
+    handleSignOut();
+  }
 
   return (
     <>
@@ -66,7 +89,7 @@ export default function Home() {
           handleSignOut() /* checks if you have a jwt token, if not you get sent back to localhost/3000 */
       }
       {useObject.email_verified && (
-        <div className="">
+        <div>
           <UserNavBar
             handleSingOut={handleSignOut}
             objectValList={[
@@ -77,16 +100,19 @@ export default function Home() {
             onToggle={toggleVisibility}
           />
           <div className="page-container">
-            {!visible && (
+            {visible && (
               <>
-                <aside>
+                <div className="whitelistContent">
                   <Whitelist data={data} />
-                  <AddUserForm currentuser={useObject.email} />
-                </aside>
+                  <div className="container">
+                    <AddUserForm />
+                    <RemoveUserForm />
+                  </div>
+                </div>
               </>
             )}
+            <Camera />
           </div>
-          <Camera />
           <Footer />
         </div>
       )}

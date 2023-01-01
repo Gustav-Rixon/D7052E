@@ -100,7 +100,13 @@ def add_user_to_whitelist():
     return 'Success'
 
 
-
+"""
+/whitelist/remove
+Remove a user
+A Owner can remove admins & users
+A Admin can remove users
+A user Cannot remove people
+"""
 @app.route('/whitelist/remove', methods=['POST'])
 def remove_user_from_whitelist():
     # Read the contents of the whitelist file
@@ -109,28 +115,53 @@ def remove_user_from_whitelist():
 
     # Get the email of the user to be removed and the current user's email from the request body
     data = request.get_json()
-    email = data['email']
-    current_user_email = data['current_user_email']
-    current_user_role = data['current_user_role']
+    remove_user = data[0]
+    current_user = data[1]
+
+    # Get the role of the current user
+    current_user_role = None
+    for user in whitelist['Whitelist']:
+        if user['email'] == current_user['email']:
+            if user['owner']:
+                current_user_role = 'owner'
+                break
+            elif user['admin']:
+                current_user_role = 'admin'
+                break
+            break
+
+    remove_user_role = None
+    for user in whitelist['Whitelist']:
+        if user['email'] == remove_user['email']:
+            if user['owner']:
+                remove_user_role = 'owner'
+                break
+            elif user['admin']:
+                remove_user_role = 'admin'
+                break
+            break
+
+    if current_user_role == 'owner' and remove_user_role not in ['owner']:
+        pass  # Owners can't remove any user
+    if current_user_role == 'admin' and remove_user_role not in ['owner', 'admin']:
+        pass  # Admins can remove non-admins
+    else:
+        return 'Insufficient permissions', 403
 
     # Find the index of the user to be removed
     index = -1
     for i, user in enumerate(whitelist['Whitelist']):
-        if user['email'] == email:
+        if user['email'] == remove_user['email']:
             index = i
             break
 
-    # Check if the user was found and if the current user has sufficient permissions
+    # Check if the user was found
     if index == -1:
         return 'User not found', 404
-    elif current_user_email == email:
+
+    # Check if the user is trying to remove themselves
+    if remove_user['email'] == current_user['email']:
         return 'Cannot remove self', 403
-    elif current_user_role == 'owner':
-        pass  # Owners can remove any user
-    elif current_user_role == 'admin' and not user['admin']:
-        pass  # Admins can remove non-admins
-    else:
-        return 'Insufficient permissions', 403
 
     # Remove the user from the Whitelist array
     whitelist['Whitelist'].pop(index)
@@ -140,123 +171,74 @@ def remove_user_from_whitelist():
         json.dump(whitelist, f)
     return 'Success'
 
+"""
+/get_jwt
+Returns the jwt based on email
+"""
+@app.route('/get_jwt', methods=['POST'])
+def get_jwt():
+    # Get the email of the user from the request payload
+    email = request.json['email']
 
-@app.route('/whitelist/promote', methods=['POST'])
-def promote_user_to_admin():
     # Read the contents of the whitelist file
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
 
-    # Get the email of the user to be promoted and the current user's role from the request body
-    data = request.get_json()
-    email = data['email']
-    current_user_role = data['current_user_role']
-
-    # Find the index of the user to be promoted
-    index = -1
-    for i, user in enumerate(whitelist['Whitelist']):
-        if user['email'] == email:
-            index = i
+    # Look up the user in the whitelist
+    user = None
+    for users in whitelist['Whitelist']:
+        if users['email'] == email:
+            user = users
             break
 
-    # Check if the user was found and if the current user has sufficient permissions
-    if index == -1:
-        return 'User not found', 404
-    elif current_user_role != 'owner':
-        return 'Insufficient permissions', 403
+    # If the user was not found in the whitelist, return an error
+    if not user:
+        return jsonify({'error': 'User not found in whitelist'}), 404
 
-    # Promote the user to an admin
-    whitelist['Whitelist'][index]['admin'] = True
-
-    # Write the updated whitelist back to the file
-    with open('whitelist.json', 'w') as f:
-        json.dump(whitelist, f)
-
-    return 'Success'
+    # Return the JWT for the user to the client
+    return jsonify({'jwt': user['jwt']})
 
 
-@app.route('/whitelist/demote', methods=['POST'])
-def demote_admin_to_user():
+"""
+/set_jwt
+sets the jwt value for the user
+"""
+@app.route('/set_jwt', methods=['POST'])
+def set_jwt():
+    # Get the {jwt: jwt_web,email: email} of the user from the request payload
+    data = request.get_json()
+
+    jwt_web = data['jwt']
+    email = data['email']
+
+    print(jwt_web)
+    print(email)
+
     # Read the contents of the whitelist file
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
 
-    # Get the email of the admin to be demoted and the current user's role from the request body
-    data = request.get_json()
-    email = data['email']
-    current_user_role = data['current_user_role']
-
-    # Find the index of the admin to be demoted
-    index = -1
-    for i, user in enumerate(whitelist['Whitelist']):
-        if user['email'] == email:
-            index = i
+    # Look up the user in the whitelist
+    user = None
+    for users in whitelist['Whitelist']:
+        if users['email'] == email:
+            user = users
             break
 
-    # Check if the admin was found and if the current user has sufficient permissions
-    if index == -1:
-        return 'User not found', 404
-    elif current_user_role != 'owner':
-        return 'Insufficient permissions', 403
-    elif not user['admin']:
-        return 'User is not an admin', 400
+    # If the user was not found in the whitelist, return an error
+    if not user:
+        return jsonify({'error': 'User not found in whitelist'}), 404
 
-    # Demote the admin to a regular user
-    whitelist['Whitelist'][index]['admin'] = False
+    # Change the jwt value for the user
+    user['jwt'] = jwt_web
 
-    # Write the updated whitelist back to the file
+    # Save the updated whitelist to the file
     with open('whitelist.json', 'w') as f:
         json.dump(whitelist, f)
 
+    # Return 'Success'
     return 'Success'
 
-
-@app.route('/test/edit_json', methods=['POST'])
-def edit_json():
-
-    # Get the Request Value
-    jwt_token = request.form['jwt']
-
-    try:
-        # Decode and verify the JWT using the secret key
-        decoded_token = jwt.decode(jwt_token, secret_key, verify=True)
-    except jwt.exceptions.DecodeError:
-        # The JWT is invalid
-        print("The JWT is invalid")
-    except jwt.exceptions.ExpiredSignatureError:
-        # The JWT has expired
-        print("The JWT has expired")
-    else:
-        # The JWT is valid
-        print("The JWT is valid")
-
-    # The decoded token is a dictionary containing the claims of the JWT
-    print(decoded_token)
-
-    # Read the requested data
-    data = request.get_json()
-
-    # Load the JSON file
-    with open('whitelist.json', 'r') as f:
-        for item in f:
-            if (item['email']) == decoded_token.email:
-                return
-            if (item['jwt']) == jwt_token:
-                return
-            if item['owner'] == True:
-                return
-            if item['admin'] == True:
-                return
-        json_data = json.load(f)
-
-    # Modify the JSON data
-    json_data['key'] = data['new_value']
-
-    # Sending modified data back to the frontend
-    with open('whitelist.json', 'w') as f:
-        json.dump(json_data, f)
-
-    return 'Json file successfully edited!'
 
 
 if __name__ == '__main__':

@@ -11,12 +11,17 @@
   width: 50%;
 }
 
-.whitelist {
+.apicontent {
   width: fit-content;
 }
 
-.whitelistH3 {
+.apicontenth3 {
   text-align: center;
+}
+
+.adduser {
+  border: 2px solid #ccc;
+  padding: 18px;
 }
 
 .scrollable {
@@ -36,7 +41,8 @@
 }
 
 .page-container {
-  padding: 30px 30px 30px;
+  margin-left: 30px;
+  margin-top: 10px;
 }
 
 footer {
@@ -72,16 +78,36 @@ footer p {
   background-color: #8ebf42;
 }
 
-aside {
-    display: flex;
-    align-items: center;
-  }
-
-.addUser {
-  padding: 15px;
-  border: 2px solid #ccc;
+.whitelistContent {
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 
-.removeUser {
-  padding-top: 15px;
+#my-form {
+  background-color: lightgray;
+  padding: 20px;
+}
+
+#my-form label {
+  display: block;
+}
+
+#my-form input[type="email"] {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+#my-form input[type="checkbox"] {
+  margin-bottom: 20px;
+}
+
+#my-form button[type="submit"] {
+  width: 100%;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  margin-left: 2px;
 }
