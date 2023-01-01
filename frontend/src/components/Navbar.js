@@ -26,7 +26,7 @@ function UserNavBar({ handleSingOut, objectValList, onToggle }) {
           </Nav>
           <Button
             onClick={handleClick}
-            variant={active ? "primary" : "outline-success"}
+            variant={active ? "success" : "outline-success"}
             className="mx-2"
           >
             Whitelist
