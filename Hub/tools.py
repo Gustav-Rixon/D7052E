@@ -16,3 +16,4 @@ class Tools:
                 json.dump(data, outfile, 
                         indent=4,  
                         separators=(',',': '))
+            return "succ"

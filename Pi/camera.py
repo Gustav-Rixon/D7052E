@@ -1,9 +1,8 @@
 from datetime import datetime
 from time import sleep
-import os
-from datetime import datetime
-from dotenv import load_dotenv
 import picamera
+import os
+from dotenv import load_dotenv
 
 
 load_dotenv()
