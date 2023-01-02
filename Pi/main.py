@@ -1,3 +1,4 @@
+import os
 import time
 import camera
 import mail
@@ -6,6 +7,10 @@ import sensor
 import upload
 import join
 
+
+
+HUB_IP = os.getenv('HUB_IP')
+HubIP = HUB_IP
 class Main:
 
     def __init__(self):
@@ -17,9 +22,13 @@ class Main:
         self.mail_main = mail.Email()
         #upload to drive client
         self.upload_main = upload.Upload()
+        # Join client
+        self.join_main = join.Join()
     
     def start(self):
         print("starting...")
+        
+        
         while True:
             record_camera_thread = threading.Thread(target=self.camera_main.record, args=())
             mail_thread = threading.Thread(target=self.mail_main.alert, args=())

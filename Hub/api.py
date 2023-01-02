@@ -1,6 +1,9 @@
 from flask import Flask, Response
 import newpi
 import tools
+import os
+
+os.environ['FLASK_ENV'] = 'production'
 
 app = Flask(__name__)
 
@@ -19,4 +22,4 @@ def rename(id, name):
     return str(test)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
