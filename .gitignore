@@ -3,3 +3,8 @@ notes.txt
 
 __pycache__/
 *.py[cod]
+
+node_modules/
+
+temp.txt
+frontend/src/components/test.js

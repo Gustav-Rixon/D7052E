@@ -7,6 +7,7 @@ import Whitelist from "../components/Whitelist";
 import Footer from "../components/Footer";
 import { AddUserForm, RemoveUserForm } from "../components/UserForm";
 import Camera from "../components/Camera";
+import { CSSTransition } from "react-transition-group";
 
 function handleSignOut() {
   setCookie("jwt_cookie", "", 1);
@@ -70,6 +71,16 @@ export default function Home() {
     fetchData();
   }, []);
 
+  // Check if web jwt and api jwt are the same
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (jwt_api !== obj) {
+        handleSignOut();
+      }
+    }, 6000); // 300000 milliseconds = 5 minutes
+    return () => clearInterval(interval);
+  }, [jwt_api]);
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -100,17 +111,21 @@ export default function Home() {
             onToggle={toggleVisibility}
           />
           <div className="page-container">
-            {visible && (
-              <>
-                <div className="whitelistContent">
-                  <Whitelist data={data} />
-                  <div className="containerAddRemove">
-                    <AddUserForm />
-                    <RemoveUserForm />
-                  </div>
+            <CSSTransition
+              in={visible}
+              timeout={400}
+              classNames="list-transition"
+              unmountOnExit
+              appear
+            >
+              <div className="whitelistContent">
+                <Whitelist data={data} />
+                <div className="containerAddRemove">
+                  <AddUserForm />
+                  <RemoveUserForm />
                 </div>
-              </>
-            )}
+              </div>
+            </CSSTransition>
             <Camera />
           </div>
           <Footer />

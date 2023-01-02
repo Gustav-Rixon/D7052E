@@ -132,16 +132,18 @@ export const RemoveUserForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      // Create the new user object with the form data
-      const user = {
-        email: email,
-      };
-      // Call the addUserToWhitelist function with the new user object
-      const result = await removeUserFromWhitelist(user);
-      console.log(result);
-    } catch (error) {
-      console.log(error);
+    if (window.confirm("Are you sure you want to remove this user?")) {
+      try {
+        // Create the user object with the form data
+        const user = {
+          email: email,
+        };
+        // Call the removeUserFromWhitelist function with the user object
+        const result = await removeUserFromWhitelist(user);
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -162,6 +164,7 @@ export const RemoveUserForm = () => {
                 className="form-control"
               />
             </div>
+
             <button type="submit" className="btn btn-primary mt-4">
               Remove User
             </button>

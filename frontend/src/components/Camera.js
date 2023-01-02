@@ -3,8 +3,8 @@ import React from "react";
 const MultipleLiveStreaming = () => {
   return (
     <>
-      <div className="col-lg-7">
-        <h3 className="mt-3">Multiple Live Streaming</h3>
+      <div className="CameraStreams">
+        <h3 className="mx-auto mt-3">Multiple Live Streaming</h3>
         <img
           src="{{ url_for('video_feed', id='0') }}"
           width="100%"

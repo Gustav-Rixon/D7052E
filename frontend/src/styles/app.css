@@ -13,12 +13,10 @@
   width: 50%;
 }
 
-
 /* Centers the h3 text content */
 .apicontenth3 {
   text-align: center;
 }
-
 
 /* user form shaping */
 .user {
@@ -45,14 +43,16 @@
 
 /* Total Page CSS */
 .page-container {
+  overflow: auto; /* allow page to scroll if content overflows */
   margin-left: 30px;
   margin-top: 10px;
   margin-right: 30px;
+  margin-bottom: 10px;
+  min-height: 500px; /* minimum height for page one */
 }
 
 /* Footer CSS */
 footer {
-  background-color: #333;
   color: #fff;
   padding: 20px;
   text-align: center;
@@ -64,7 +64,7 @@ footer {
 
 footer p {
   margin: 0;
-} 
+}
 
 /* Whitelist content UserForm and Whitelist*/
 .whitelistContent {
@@ -76,5 +76,28 @@ footer p {
 .containerAddRemove {
   display: grid;
   grid-template-rows: repeat(2, 1fr);
-  margin-left: 2px;
+  margin-left: 4px;
+}
+
+.CameraStreams {
+  text-align: center;
+}
+
+/* Transistion */
+.list-transition-enter {
+  opacity: 0;
+}
+
+.list-transition-enter-active {
+  opacity: 1;
+  transition: opacity 400ms ease-in;
+}
+
+.list-transition-exit {
+  opacity: 1;
+}
+
+.list-transition-exit-active {
+  opacity: 0;
+  transition: opacity 400ms ease-out;
 }

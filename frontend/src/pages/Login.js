@@ -84,6 +84,7 @@ export default function Login() {
       )}
       <div id="signInDiv" class="font-monospace">
         <center>
+          <h3 style={{ marginBottom: 90 }}>D7052E Camera Security AB</h3>
           <div ref={divRef} />
         </center>
       </div>
