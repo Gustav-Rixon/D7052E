@@ -5,9 +5,8 @@ import { getCookie, setCookie } from "../utils/cookies";
 import jwt_decode from "jwt-decode";
 import Whitelist from "../components/Whitelist";
 import Footer from "../components/Footer";
-import AddUserForm from "../components/AddUser";
+import { AddUserForm, RemoveUserForm } from "../components/UserForm";
 import Camera from "../components/Camera";
-import RemoveUserForm from "../components/RemoveUser";
 
 function handleSignOut() {
   setCookie("jwt_cookie", "", 1);
@@ -16,11 +15,11 @@ function handleSignOut() {
 
 // Load cookie value.
 const obj = getCookie("jwt_cookie");
-let useObject;
+let jwt_decode_object;
 try {
-  useObject = jwt_decode(obj);
+  jwt_decode_object = jwt_decode(obj);
 } catch (error) {
-  useObject = false;
+  jwt_decode_object = false;
   console.log(error);
 }
 
@@ -42,7 +41,7 @@ export default function Home() {
         const response = await fetch("/get_jwt", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: useObject.email }),
+          body: JSON.stringify({ email: jwt_decode_object.email }),
         });
         const data = await response.json();
         setJWT(data.jwt);
@@ -79,23 +78,24 @@ export default function Home() {
   }
 
   if (jwt_api !== obj) {
+    new Promise((r) => setTimeout(r, 2000)); //Ful fix todo fixa idk.
     handleSignOut();
   }
 
   return (
     <>
       {
-        !useObject &&
+        !jwt_decode_object &&
           handleSignOut() /* checks if you have a jwt token, if not you get sent back to localhost/3000 */
       }
-      {useObject.email_verified && (
+      {jwt_decode_object.email_verified && (
         <div>
           <UserNavBar
             handleSingOut={handleSignOut}
             objectValList={[
-              useObject.picture,
-              useObject.given_name,
-              useObject.family_name,
+              jwt_decode_object.picture,
+              jwt_decode_object.given_name,
+              jwt_decode_object.family_name,
             ]}
             onToggle={toggleVisibility}
           />
@@ -104,7 +104,7 @@ export default function Home() {
               <>
                 <div className="whitelistContent">
                   <Whitelist data={data} />
-                  <div className="container">
+                  <div className="containerAddRemove">
                     <AddUserForm />
                     <RemoveUserForm />
                   </div>

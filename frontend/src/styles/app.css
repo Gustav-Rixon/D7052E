@@ -1,3 +1,4 @@
+/* signinDiv for Login Page */
 #signInDiv {
   display: flex;
   justify-content: center;
@@ -6,24 +7,26 @@
   min-height: 100vh;
 }
 
+/* Profile Navbar picture */
 #Profile {
   border-radius: 50%;
   width: 50%;
 }
 
-.apicontent {
-  width: fit-content;
-}
 
+/* Centers the h3 text content */
 .apicontenth3 {
   text-align: center;
 }
 
-.adduser {
+
+/* user form shaping */
+.user {
   border: 2px solid #ccc;
   padding: 18px;
 }
 
+/* Scrollable css for the Whitelist content */
 .scrollable {
   height: 450px;
   overflow-y: scroll;
@@ -40,11 +43,14 @@
   border-radius: 10px;
 }
 
+/* Total Page CSS */
 .page-container {
   margin-left: 30px;
   margin-top: 10px;
+  margin-right: 30px;
 }
 
+/* Footer CSS */
 footer {
   background-color: #333;
   color: #fff;
@@ -58,55 +64,16 @@ footer {
 
 footer p {
   margin: 0;
-}
+} 
 
-.column {
-  display: flex;
-  flex-direction: column;
-}
-
-#outer-div {
-  width: 100%;
-  text-align: center;
-  background-color: #0666a3;
-}
-
-#inner-div {
-  display: inline-block;
-  margin: 0 auto;
-  padding: 3px;
-  background-color: #8ebf42;
-}
-
+/* Whitelist content UserForm and Whitelist*/
 .whitelistContent {
   display: flex;
-  align-items: center;
-  align-content: center;
+  justify-content: center;
 }
 
-#my-form {
-  background-color: lightgray;
-  padding: 20px;
-}
-
-#my-form label {
-  display: block;
-}
-
-#my-form input[type="email"] {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-#my-form input[type="checkbox"] {
-  margin-bottom: 20px;
-}
-
-#my-form button[type="submit"] {
-  width: 100%;
-}
-
-.container {
+/* For the adduser remove user forms*/
+.containerAddRemove {
   display: grid;
   grid-template-rows: repeat(2, 1fr);
   margin-left: 2px;

@@ -14,8 +14,8 @@ export default function Login() {
 
   //Decodes the response from google oAuth 2.0 and decodes it.
   function handleCallbackResponse(response, error) {
-    var useObject = jwt_decode(response.credential);
-    setUser(useObject);
+    var jwt_decode_object = jwt_decode(response.credential);
+    setUser(jwt_decode_object);
     setWEBJWT(response.credential);
 
     setCookie("jwt_cookie", response.credential, 1);
@@ -25,7 +25,7 @@ export default function Login() {
     console.log("Encoded JWT ID token: ");
     console.log(response);
     console.log("Decoded JWT credentials: ");
-    console.log(useObject);
+    console.log(jwt_decode_object);
   }
 
   // Google login auth

@@ -5,21 +5,22 @@ import jwt_decode from "jwt-decode";
 
 // Load cookie value.
 const obj = getCookie("jwt_cookie");
-let useObject;
+let jwt_decode_object;
 try {
-  useObject = jwt_decode(obj);
+  jwt_decode_object = jwt_decode(obj);
 } catch (error) {
-  useObject = false;
+  jwt_decode_object = false;
   console.log(error);
 }
 
+// API code post to add user to whitelist
 const addUserToWhitelist = async (newUser) => {
   const response = await fetch("/whitelist/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify([newUser, { email: useObject.email }]),
+    body: JSON.stringify([newUser, { email: jwt_decode_object.email }]),
   });
 
   if (response.ok) {
@@ -31,7 +32,26 @@ const addUserToWhitelist = async (newUser) => {
   }
 };
 
-const AddUserForm = () => {
+// API code post to remove user from whitelist
+const removeUserFromWhitelist = async (user) => {
+  const response = await fetch("/whitelist/remove", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([user, { email: jwt_decode_object.email }]),
+  });
+
+  if (response.ok) {
+    window.alert("User removed from whitelist successfully");
+    return response;
+  } else {
+    window.alert("Error removing user from whitelist ");
+    throw new Error(response);
+  }
+};
+
+export const AddUserForm = () => {
   const [email, setEmail] = useState("");
   const [admin, setAdmin] = useState(false);
   const [owner, setOwner] = useState(false);
@@ -57,7 +77,7 @@ const AddUserForm = () => {
     <>
       <div className="apicontent">
         <h3 className="apicontenth3">Add User</h3>
-        <div className="adduser">
+        <div className="user">
           <form onSubmit={handleSubmit} className="mb-3">
             <div className="form-group">
               <label htmlFor="email">Email:</label>
@@ -107,4 +127,47 @@ const AddUserForm = () => {
   );
 };
 
-export default AddUserForm;
+export const RemoveUserForm = () => {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      // Create the new user object with the form data
+      const user = {
+        email: email,
+      };
+      // Call the addUserToWhitelist function with the new user object
+      const result = await removeUserFromWhitelist(user);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      <div className="apicontent mt-4">
+        <h3 className="apicontenth3">Remove User</h3>
+        <div className="user">
+          <form onSubmit={handleSubmit} className="mb-3">
+            <div className="form-group">
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                required
+                onChange={(event) => setEmail(event.target.value)}
+                className="form-control"
+              />
+            </div>
+            <button type="submit" className="btn btn-primary mt-4">
+              Remove User
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
