@@ -5,10 +5,11 @@ import requests
 
 class Join:
     
-    def join(hostIP):
+    def join(self, hostIP):
         myIP = Join.getIP()
-        abc = requests.get(hostIP +"/camera/join/"+ myIP)
-        return int(abc)
+        response = requests.get(str(hostIP) +"/camera/join/"+ str(myIP))
+        data = response.text
+        return int(data)
         
     def getIP():
         hostname = socket.gethostname()

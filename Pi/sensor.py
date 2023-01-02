@@ -1,5 +1,4 @@
 from gpiozero import MotionSensor
-from camera import camera
 pir = MotionSensor(4)
 #https://gpiozero.readthedocs.io/en/stable/api_input.html
 class Sensor:

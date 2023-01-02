@@ -12,10 +12,10 @@ imagePath = FILE_PATH
 class Camera:
     #TODO FIX so that recording time is dependant on sensor input not just activation
     # Record a video
-    def record(self):
+    def record(self,id):
         camera = picamera.PiCamera(resolution=(640, 480), framerate=24)
         # dd/mm/YY H:M:S TODO method for this line?
-        dt_string_vid = datetime.now().strftime("%Y:%m:%d-%H:%M:%S")
+        dt_string_vid = str(id) +'__'+ datetime.now().strftime("%Y:%m:%d-%H:%M:%S")
         # Recording path
         recordPath = imagePath + f"/{dt_string_vid}.h264"
 
