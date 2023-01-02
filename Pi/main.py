@@ -27,8 +27,8 @@ class Main:
     
     def start(self):
         print("starting...")
-        
-        
+        id = self.join_main.join(HubIP)
+        print(id)
         while True:
             record_camera_thread = threading.Thread(target=self.camera_main.record, args=())
             mail_thread = threading.Thread(target=self.mail_main.alert, args=())
