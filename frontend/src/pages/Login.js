@@ -8,16 +8,18 @@ import "../styles/app.css";
 import { setCookie } from "../utils/cookies";
 
 export default function Login() {
+  // State to track whether the Google OAuth 2 key is missing or invalid
+  const [keyError, setKeyError] = useState(false);
+
   // State for users callback response values from google oAuth 2.0
   const [user, setUser] = useState({});
   const [jwt, setWEBJWT] = useState("");
 
-  //Decodes the response from google oAuth 2.0 and decodes it.
+  //Decodes the response from google oAuth 2.0.
   function handleCallbackResponse(response, error) {
     var jwt_decode_object = jwt_decode(response.credential);
-    setUser(jwt_decode_object);
-    setWEBJWT(response.credential);
-
+    setUser(jwt_decode_object); // Decoded JWT webtoken, contains google user info
+    setWEBJWT(response.credential); //JWT webtoken
     setCookie("jwt_cookie", response.credential, 1);
 
     console.log("Error: ");
@@ -32,7 +34,6 @@ export default function Login() {
   const divRef = useRef(null);
   useEffect(() => {
     /* global google */
-
     google.accounts.id.prompt();
 
     if (divRef.current) {
@@ -44,6 +45,10 @@ export default function Login() {
         theme: "outline",
         size: "large",
       });
+    }
+
+    if (user && jwt) {
+      LoggedIn();
     }
     // eslint-disable-next-line
   }, [divRef.current]);
@@ -70,18 +75,19 @@ export default function Login() {
     window.location.replace("http://localhost:3000/home");
   }
 
-  console.log(process.env);
-
   return (
     <div className="App">
+      {keyError && (
+        <div className="error-banner">
+          Missing or Invalid Google OAuth 2 Key
+        </div>
+      )}
       <div id="signInDiv" class="font-monospace">
         <center>
           <div ref={divRef} />
         </center>
       </div>
-      {!process.env.REACT_APP_CLIENT_ID &&
-        alert("Missing or Invalid Google OAuth 2 Key")}
-      {user.email_verified && LoggedIn()}
+      {!process.env.REACT_APP_CLIENT_ID && setKeyError(true)}
     </div>
   );
 }
