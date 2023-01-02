@@ -58,18 +58,20 @@ export const AddUserForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      // Create the new user object with the form data
-      const newUser = {
-        email: email,
-        admin: admin,
-        owner: owner,
-      };
-      // Call the addUserToWhitelist function with the new user object
-      const result = await addUserToWhitelist(newUser);
-      console.log(result);
-    } catch (error) {
-      console.log(error);
+    if (window.confirm("Are you sure you want to add this user?")) {
+      try {
+        // Create the new user object with the form data
+        const newUser = {
+          email: email,
+          admin: admin,
+          owner: owner,
+        };
+        // Call the addUserToWhitelist function with the new user object
+        const result = await addUserToWhitelist(newUser);
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
