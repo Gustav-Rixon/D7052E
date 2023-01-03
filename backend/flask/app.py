@@ -40,7 +40,6 @@ def get_whitelist():
 
     return jsonify(filtered_whitelist)
 
-
 """ 
 /whitelist/add
 Adds a user
@@ -56,7 +55,6 @@ def add_user_to_whitelist():
 
     # Get the new user data from the request body
     data = request.get_json()
-
     new_user = {
         "email": data['target_user_email'],
         "owner": data['owner_web'],
@@ -104,7 +102,6 @@ def add_user_to_whitelist():
         json.dump(whitelist, f)
 
     return 'Success'
-
 
 """
 /whitelist/remove
@@ -181,7 +178,6 @@ def remove_user_from_whitelist():
     with open('whitelist.json', 'w') as f:
         json.dump(whitelist, f)
     return 'Success'
-
 
 """
 /whitelist/promote
@@ -266,13 +262,11 @@ def demote_user():
 
     # Get the data for the user to be demoted    and the current user from the request body
     data = request.get_json()
-
     user_to_demote = data['target_user_email']
     current_user = data['current_user_email']
     jwt_web = data['jwt_web']
     owner_web = data["owner_web"]
     admin_web = data['admin_web']
-
 
     # Check if the current user is in the Whitelist array
     current_user_found = False
@@ -329,12 +323,12 @@ Returns the jwt based on email
 """
 @app.route('/get_jwt', methods=['POST'])
 def get_jwt():
-    # Get the email of the user from the request payload
-    email = request.json['email']
-
     # Read the contents of the whitelist file
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
+
+    # Get the email of the user from the request payload
+    email = request.json['email']
 
     # Look up the user in the whitelist
     user = None
@@ -357,18 +351,14 @@ sets the jwt value for the user
 """
 @app.route('/set_jwt', methods=['POST'])
 def set_jwt():
-    # Get the {jwt: jwt_web,email: email} of the user from the request payload
-    data = request.get_json()
-
-    jwt_web = data['jwt']
-    email = data['email']
-
-    print(jwt_web)
-    print(email)
-
     # Read the contents of the whitelist file
     with open('whitelist.json', 'r') as f:
         whitelist = json.load(f)
+
+    # Get the {jwt: jwt_web,email: email} of the user from the request payload
+    data = request.get_json()
+    jwt_web = data['jwt']
+    email = data['email']
 
     # Look up the user in the whitelist
     user = None
