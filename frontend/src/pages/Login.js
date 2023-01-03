@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import jwt_decode from "jwt-decode";
 
 import "../styles/app.css";
-import { setCookie } from "../utils/cookies";
+import { setCookie } from "../utils/utils";
 
 export default function Login() {
   // State to track whether the Google OAuth 2 key is missing or invalid

@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserNavBar from "../components/Navbar";
-import { getCookie, setCookie } from "../utils/cookies";
+import { getCookie, setCookie, sleep } from "../utils/utils";
 import jwt_decode from "jwt-decode";
 import Whitelist from "../components/Whitelist";
 import Footer from "../components/Footer";
-import { AddUserForm, RemoveUserForm } from "../components/UserForm";
+import {
+  AddUserForm,
+  DemoteUserForm,
+  PromoteUserForm,
+  RemoveUserForm,
+} from "../components/UserForm";
 import Camera from "../components/Camera";
 import { CSSTransition } from "react-transition-group";
 
@@ -26,10 +31,9 @@ try {
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [jwt_api, setJWT] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   function toggleVisibility() {
     setVisible((prevVisible) => !prevVisible);
@@ -38,6 +42,7 @@ export default function Home() {
   // JWT
   useEffect(() => {
     async function fetchJWT() {
+      setLoading(true); // set loading to true before making the request
       try {
         const response = await fetch("/get_jwt", {
           method: "POST",
@@ -47,28 +52,12 @@ export default function Home() {
         const data = await response.json();
         setJWT(data.jwt);
       } catch (err) {
-        console.log(err);
+        setError(err); // set error if there is an error
       }
+      setLoading(false); // set loading to false after request is complete
     }
 
     fetchJWT();
-  }, []);
-
-  //Whitelist
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch("/whitelist");
-        const json = await response.json();
-        setData(json);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
   }, []);
 
   // Check if web jwt and api jwt are the same
@@ -81,6 +70,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [jwt_api]);
 
+  // State loading and error
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -88,10 +78,11 @@ export default function Home() {
     return <p>An error occurred: {error.message}</p>;
   }
 
-  if (jwt_api !== obj) {
-    new Promise((r) => setTimeout(r, 2000)); //Ful fix todo fixa idk.
-    handleSignOut();
-  }
+  sleep(2000).then(() => {
+    if (jwt_api !== obj) {
+      //handleSignOut();
+    }
+  });
 
   return (
     <>
@@ -119,7 +110,11 @@ export default function Home() {
               appear
             >
               <div className="whitelistContent">
-                <Whitelist data={data} />
+                <div className="containerAddRemove">
+                  <PromoteUserForm />
+                  <DemoteUserForm />
+                </div>
+                <Whitelist />
                 <div className="containerAddRemove">
                   <AddUserForm />
                   <RemoveUserForm />

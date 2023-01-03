@@ -1,7 +1,36 @@
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/app.css";
 
-const Whitelist = ({ data }) => {
+const Whitelist = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  //Whitelist
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("/whitelist");
+        const json = await response.json();
+        setData(json);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (error) {
+    return <p>An error occurred: {error.message}</p>;
+  }
+
   return (
     <div>
       {data.length === 0 ? (

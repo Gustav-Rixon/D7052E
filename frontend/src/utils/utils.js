@@ -20,3 +20,7 @@ export function getCookie(cname) {
   }
   return "";
 }
+
+export function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}

@@ -99,5 +99,5 @@ footer p {
 
 .list-transition-exit-active {
   opacity: 0;
-  transition: opacity 400ms ease-out;
+  transition: opacity 200ms ease-out;
 }

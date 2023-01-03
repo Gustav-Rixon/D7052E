@@ -56,23 +56,29 @@ def add_user_to_whitelist():
 
     # Get the new user data from the request body
     data = request.get_json()
-    new_user = data[0]
-    current_user = data[1]
 
-    # Add a UUID to the new_user variable
-    new_user['uuid'] = str(uuid.uuid4())
-
-    # Add the jwt variable to the new_user dictionary
-    new_user['jwt'] = ""
+    new_user = {
+        "email": data['target_user_email'],
+        "owner": data['owner_web'],
+        "admin": data['admin_web'],
+        "uuid": str(uuid.uuid4()),
+        "jwt": "",
+    }
+    current_user = data['current_user_email']
+    jwt_web = data['jwt_web']
 
     # Check if the current user is in the Whitelist array
     current_user_found = False
     for user in whitelist['Whitelist']:
-        if user['email'] == current_user['email']:
+        if user['email'] == current_user:
             current_user_found = True
             break
     if not current_user_found:
         return 'Current user not found', 404
+
+    # Check if the current user's JWT matches jwt_web
+    if user['jwt'] != jwt_web:
+        return 'JWT does not match', 401
 
     # Check if the new user is already in the Whitelist array
     for user in whitelist['Whitelist']:
@@ -115,13 +121,14 @@ def remove_user_from_whitelist():
 
     # Get the email of the user to be removed and the current user's email from the request body
     data = request.get_json()
-    remove_user = data[0]
-    current_user = data[1]
+    remove_user = data['target_user_email']
+    current_user = data['current_user_email']
+    jwt_web = data['jwt_web']
 
     # Get the role of the current user
     current_user_role = None
     for user in whitelist['Whitelist']:
-        if user['email'] == current_user['email']:
+        if user['email'] == current_user:
             if user['owner']:
                 current_user_role = 'owner'
                 break
@@ -130,9 +137,13 @@ def remove_user_from_whitelist():
                 break
             break
 
+    # Check if the current user's JWT matches jwt_web
+    if user['jwt'] != jwt_web:
+        return 'JWT does not match', 401
+
     remove_user_role = None
     for user in whitelist['Whitelist']:
-        if user['email'] == remove_user['email']:
+        if user['email'] == remove_user:
             if user['owner']:
                 remove_user_role = 'owner'
                 break
@@ -151,7 +162,7 @@ def remove_user_from_whitelist():
     # Find the index of the user to be removed
     index = -1
     for i, user in enumerate(whitelist['Whitelist']):
-        if user['email'] == remove_user['email']:
+        if user['email'] == remove_user:
             index = i
             break
 
@@ -160,7 +171,7 @@ def remove_user_from_whitelist():
         return 'User not found', 404
 
     # Check if the user is trying to remove themselves
-    if remove_user['email'] == current_user['email']:
+    if remove_user == current_user:
         return 'Cannot remove self', 403
 
     # Remove the user from the Whitelist array
@@ -169,6 +180,147 @@ def remove_user_from_whitelist():
     # Write the updated whitelist back to the file
     with open('whitelist.json', 'w') as f:
         json.dump(whitelist, f)
+    return 'Success'
+
+
+"""
+/whitelist/promote
+Owners can promote others to owner and admin
+Admins can promote users to admins
+Users cant promote anyone
+"""
+@app.route('/whitelist/promote', methods=['POST'])
+def promote_user():
+    # Read the contents of the whitelist file
+    with open('whitelist.json', 'r') as f:
+        whitelist = json.load(f)
+
+    # Get the data for the user to be promoted and the current user from the request body
+    data = request.get_json()
+    user_to_promote = data['target_user_email']
+    current_user = data['current_user_email']
+    jwt_web = data['jwt_web']
+    owner_web = data["owner_web"]
+    admin_web = data['admin_web']
+
+    #JWT authentication
+    if user['jwt'] != jwt_web:
+        return 'JWT does not match', 401
+
+    # Check if the current user is in the Whitelist array
+    current_user_found = False
+    for user in whitelist['Whitelist']:
+        if user['email'] == current_user:
+            current_user_found = True
+            break
+    if not current_user_found:
+        return 'User not found', 404
+    
+    # Check if the user to be promoted is in the Whitelist array
+    user_to_promote_found = False
+    for user in whitelist['Whitelist']:
+        if user['email'] == user_to_promote:
+            user_to_promote_found = True
+            break
+    if not user_to_promote_found:
+        return 'User to promote not found', 404
+
+    # Check if the user to promote already has the permission
+    for user in whitelist['Whitelist']:
+        if user['email'] == user_to_promote:
+            if user['owner'] and not admin_web: # so that u can give admin to a owner
+                return 'User is already an owner', 400
+            if user['admin'] and not owner_web: # so that u can give owner to a admin
+                return 'User is already an admin', 400
+
+    for user in whitelist['Whitelist']:
+        if user['email'] == current_user:
+            if user['owner'] and owner_web:  
+                for user in whitelist['Whitelist']:
+                    if user['email'] == user_to_promote:
+                        user['owner'] = True
+            if user['admin'] and admin_web: 
+               for user in whitelist['Whitelist']:
+                    if user['email'] == user_to_promote:
+                        user['admin'] = True
+            else:
+                return 'Invalid Permissions', 400
+
+    # Write the updated whitelist back to the file
+    with open('whitelist.json', 'w') as f:
+        json.dump(whitelist, f)
+
+    return 'Success'
+
+"""
+/whitelist/demote
+Owners can demote owners to non owner
+Admins can demote admins to non admin
+Users cant demote anyone
+"""
+@app.route('/whitelist/demote', methods=['POST'])
+def demote_user():
+    # Read the contents of the whitelist file
+    with open('whitelist.json', 'r') as f:
+        whitelist = json.load(f)
+
+    # Get the data for the user to be demoted    and the current user from the request body
+    data = request.get_json()
+
+    user_to_demote = data['target_user_email']
+    current_user = data['current_user_email']
+    jwt_web = data['jwt_web']
+    owner_web = data["owner_web"]
+    admin_web = data['admin_web']
+
+
+    # Check if the current user is in the Whitelist array
+    current_user_found = False
+    for user in whitelist['Whitelist']:
+        if user['email'] == current_user:
+            current_user_found = True
+            break
+    if not current_user_found:
+        return 'User not found', 404
+    
+    #JWT authentication
+    if user['jwt'] != jwt_web:
+        return 'JWT does not match', 401
+
+    # Check if the user to be demoted to is in the Whitelist array
+    user_to_demote_found = False
+    for user in whitelist['Whitelist']:
+        if user['email'] == user_to_demote:
+            user_to_demote_found = True
+            break
+    if not user_to_demote_found:
+        return 'User to promote not found', 404
+
+    # Check if the user to promote already has the permission
+    for user in whitelist['Whitelist']:
+        if user['email'] == user_to_demote:
+            if user['owner'] and not owner_web: # so that u can give admin to a owner
+                return 'User is already an owner', 400
+            if user['admin'] and not admin_web: # so that u can give owner to a admin
+                return 'User is already an admin', 400
+
+    for user in whitelist['Whitelist']:
+        if user['email'] == current_user:
+            if user['owner'] and owner_web:  
+                for user in whitelist['Whitelist']:
+                    if user['email'] == user_to_demote:
+                        user['owner'] = False
+            if user['admin'] and admin_web: 
+               for user in whitelist['Whitelist']:
+                    if user['email'] == user_to_demote:
+                        user['admin'] = False
+            else:
+                return 'Invalid Permissions', 400
+
+    # Write the updated whitelist back to the file
+    with open('whitelist.json', 'w') as f:
+        json.dump(whitelist, f)
+
     return 'Success'
 
 """
@@ -238,7 +390,6 @@ def set_jwt():
 
     # Return 'Success'
     return 'Success'
-
 
 
 if __name__ == '__main__':
