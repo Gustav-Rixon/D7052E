@@ -110,12 +110,12 @@ export default function Home() {
               appear
             >
               <div className="whitelistContent">
-                <div className="containerAddRemove">
+                <div className="formContainer">
                   <PromoteUserForm />
                   <DemoteUserForm />
                 </div>
                 <Whitelist />
-                <div className="containerAddRemove">
+                <div className="formContainer">
                   <AddUserForm />
                   <RemoveUserForm />
                 </div>

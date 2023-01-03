@@ -9,7 +9,7 @@ const Whitelist = () => {
 
   //Whitelist
   useEffect(() => {
-    async function fetchData() {
+    const interval = setInterval(async () => {
       try {
         const response = await fetch("/whitelist");
         const json = await response.json();
@@ -19,9 +19,9 @@ const Whitelist = () => {
       } finally {
         setLoading(false);
       }
-    }
+    }, 30000); // update every 30 seconds
 
-    fetchData();
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -44,8 +44,8 @@ const Whitelist = () => {
                 {data.map((item) => (
                   <li key={item.email}>
                     <p>Email: {item.email}</p>
-                    <p>Admin: {item.admin ? "Yes" : "No"}</p>
                     <p>Owner: {item.owner ? "Yes" : "No"}</p>
+                    <p>Admin: {item.admin ? "Yes" : "No"}</p>
                   </li>
                 ))}
               </ul>

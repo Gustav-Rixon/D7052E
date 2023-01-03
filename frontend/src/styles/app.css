@@ -73,10 +73,11 @@ footer p {
 }
 
 /* For the adduser remove user forms*/
-.containerAddRemove {
+.formContainer {
   display: grid;
   grid-template-rows: repeat(2, 1fr);
   margin-left: 4px;
+  margin-right: 4px;
 }
 
 .CameraStreams {
