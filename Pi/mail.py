@@ -44,7 +44,7 @@ class Email:
 
         # Adds the motion detected image to attachment to be sent as mail.
         for filename in os.listdir(imagePath):
-            new_path = f"{imagePath}{filename}"
+            new_path = f"{imagePath}/{filename}"
             with open(new_path, 'rb') as file:
                 file_data = file.read()
                 file_name = file.name
@@ -58,6 +58,8 @@ class Email:
             smtp.send_message(newMessage)
 
     # Check gmail for Out/Home gmail to set boolean value.
+    
+    ##TODO GAMMAL KOD GÅR INTE ATT ANVÄNDA SEN 30MAY 2022
     def check(self):
 
         # https://www.systoolsgroup.com/imap/

@@ -10,11 +10,10 @@ FILE_PATH = os.getenv('FILE_PATH')
 imagePath = FILE_PATH
 
 class Camera:
-    #TODO FIX so that recording time is dependant on sensor input not just activation
+    
     # Record a video
     def record(self,id):
         camera = picamera.PiCamera(resolution=(640, 480), framerate=24)
-        # dd/mm/YY H:M:S TODO method for this line?
         dt_string_vid = str(id) +'__'+ datetime.now().strftime("%Y:%m:%d-%H:%M:%S")
         # Recording path
         recordPath = imagePath + f"/{dt_string_vid}.h264"
@@ -28,7 +27,31 @@ class Camera:
             camera.annotate_text = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             camera.wait_recording(0.2)
         camera.stop_recording()
-                
+        camera.stop_preview()
+        camera.close()
+        print("FÄRDIG!")
+        
+    # take picture    
+    def capture(self):
+        camera = picamera.PiCamera()
+        camera.resolution = (640, 480)
+        camera.capture("test.jpg")
+        camera.close()
+    
+        # moves images & videos from current images to archive.
+    def archive(self):
+        source_folder = f'/home/pi/Desktop/picture/current//'
+        destination_folder = f'/home/pi/Desktop/picture/archive//'
+
+        # fetch all files
+        for file_name in os.listdir(source_folder):
+            # construct full file path
+            source = source_folder + file_name
+            destination = destination_folder + file_name
+            # move only files
+            if os.path.isfile(source):
+                shutil.move(source, destination)
+                print('Moved:', file_name)
         
         
         

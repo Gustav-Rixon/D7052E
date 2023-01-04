@@ -16,7 +16,7 @@ class Upload:
         drive = GoogleDrive(gauth)  
              
         for filename in os.listdir(imagePath):
-            new_path = f"{imagePath}{filename}"
+            new_path = f"{imagePath}/{filename}"
             with open(new_path, 'rb') as file:
                 file_data = file.read()
                 file_name = file.name
