@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 host_name  = socket.gethostname()
-host_ip = '192.168.87.255'
+host_ip = '192.168.1.125'
 print('HOST IP:',"host_ip")
 port = 8080
 socket_address = (host_ip,port)
@@ -51,11 +51,6 @@ def video_feed(id):
     """Video streaming route."""
     return Response(show_client(addr,client_socket),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
-@app.route('/', methods=["GET"])
-def index():
-    return render_template('index.html')
 
 
 if __name__ == '__main__':
