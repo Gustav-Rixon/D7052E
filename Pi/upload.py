@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
+# ID of the destination folder
 DRIVE_ID = os.getenv('DRIVE_ID')
 driveID = DRIVE_ID
 FILE_PATH = os.getenv('FILE_PATH')
@@ -12,19 +13,30 @@ imagePath = FILE_PATH
 class Upload:
     
     def uploader(self):
-        gauth = GoogleAuth()           
-        drive = GoogleDrive(gauth)  
+        # Load the client secrets from the "client_secrets.json" file
+        gauth = GoogleAuth()
+        gauth.LoadClientConfigFile("client_secrets.json")
+
+        # Try to load the saved credentials
+        gauth.LoadCredentialsFile("credentials.json")
+
+        # If the credentials are invalid or missing, run the OAuth2 flow
+        if gauth.credentials is None or gauth.access_token_expired:
+            gauth.Refresh()
+
+        # Save the credentials for the next run
+        gauth.SaveCredentialsFile("credentials.json")
+
+        # Create a service object
+        drive = GoogleDrive(gauth)
+                # Get a list of all files in the folder
+        filenames = os.listdir(imagePath)  
              
-        for filename in os.listdir(imagePath):
-            new_path = f"{imagePath}/{filename}"
-            with open(new_path, 'rb') as file:
-                file_data = file.read()
-                file_name = file.name
-                print(f"filnamnet fan {file.name}")
-        
-        upload_file_list = [file_data]
-        for upload_file in upload_file_list:
-            gfile = drive.CreateFile({'parents': [{'id': driveID}]})
-            # Read file and set it as the content of this instance.
-            gfile.SetContentFile(upload_file)
-            gfile.Upload() # Upload the file  
+        # Upload each file
+        for filename in filenames:
+            file_path = os.path.join(imagePath, filename)
+            file = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": driveID}]})
+            file.SetContentFile(file_path)
+            file.Upload()
+            print(F'File ID: {file["id"]}') 
+            
