@@ -35,7 +35,7 @@ class Main:
         while True:
             record_camera_thread = threading.Thread(target=self.camera_main.record, args=(id, ))
             mail_thread = threading.Thread(target=self.mail_main.alert, args=())
-            #upload_thread = threading.Thread(target=self.upload_main.uploader, args=())
+            upload_thread = threading.Thread(target=self.upload_main.uploader, args=())
             if(self.sensor_main.getvalue() == 0):
                 self.sensor_main.stale()
             elif(self.sensor_main.getvalue() == 1):
@@ -45,11 +45,11 @@ class Main:
                 record_camera_thread.join()
                 print(f'sending email...')
                 mail_thread.start()
-                #print(f"uploading")
-                #upload_thread.start()
+                print(f"uploading")
+                upload_thread.start()
                 # Check status if home or not
                 mail_thread.join()
-                #upload_thread.join()
+                upload_thread.join()
                 self.delete_main.clear()
                 self.sensor_main.motion()
                 

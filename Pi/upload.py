@@ -21,9 +21,11 @@ class Upload:
         gauth.LoadCredentialsFile("credentials.json")
 
         # If the credentials are invalid or missing, run the OAuth2 flow
-        if gauth.credentials is None or gauth.access_token_expired:
+        if gauth.access_token_expired:
             gauth.Refresh()
-
+            
+        if gauth.credentials is None:
+            gauth.LocalWebserverAuth()
         # Save the credentials for the next run
         gauth.SaveCredentialsFile("credentials.json")
 
