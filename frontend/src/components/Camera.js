@@ -1,27 +1,22 @@
 import React from "react";
 
 const MultipleLiveStreaming = () => {
+  const cameras = [
+    "http://127.0.0.1:1337/video_feed/0/",
+    "http://127.0.0.1:1337/video_feed/1/",
+    "http://127.0.0.1:1337/video_feed/2/",
+    "http://127.0.0.1:1337/video_feed/3/",
+    "http://127.0.0.1:1337/video_feed/4/",
+    "http://127.0.0.1:1337/video_feed/5/",
+    "http://127.0.0.1:1337/video_feed/6/"
+  ];
+
   return (
-    <>
-      <div className="CameraStreams">
-        <h3 className="mx-auto mt-3">Multiple Live Streaming</h3>
-        <img
-          src={"http://127.0.0.1:5000/video_feed/0/"}
-          width="100%"
-          alt=" camera 1"
-        />
-        <img
-          src={"http://127.0.0.1:5000/video_feed/1/"}
-          width="100%"
-          alt=" camera 2"
-        />
-        <img
-          src={"http://127.0.0.1:5000/video_feed/2/"}
-          width="100%"
-          alt=" camera 2"
-        />
-      </div>
-    </>
+    <><h3 className="mx-auto mt-3">Multiple Live Streaming</h3><div className="cameras-container">
+      {cameras.map((camera, index) => (
+        <img src={camera} alt={`camera ${index}`} key={index} className="camera-unit" />
+      ))}
+    </div></>
   );
 };
 
