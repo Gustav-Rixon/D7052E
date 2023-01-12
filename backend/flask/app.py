@@ -5,6 +5,8 @@ import uuid
 import json
 import jwt
 import os
+import tools
+import newpi
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://localhost:5000/*'])
@@ -381,6 +383,26 @@ def set_jwt():
     # Return 'Success'
     return 'Success'
 
+
+"""
+/camera/join/<string:ip>
+Adds a camera to the cameras.json file and returns you the given id of that camera
+"""
+@app.route('/camera/join/<string:ip>', methods=["GET"])
+def join(ip):
+    temp = newpi.Newpi()
+    test = temp.joinnet(ip)
+    return str(test)
+
+"""
+/camera/name/<string:name>/<int:id>
+Takes the name and the id of the camera to rename the camera in cameras.json
+"""
+@app.route('/camera/name/<string:name>/<int:id>', methods=["POST"])
+def rename(id, name):
+    temp = tools.Tools()
+    test = temp.rename(id, name)
+    return str(test)
 
 if __name__ == '__main__':
     app.run()
