@@ -5,8 +5,8 @@ import uuid
 import json
 import jwt
 import os
-import tools
-import newpi
+# setting path
+from  backend import newpi, tools
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://localhost:5000/*'])
