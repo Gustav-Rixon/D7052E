@@ -15,6 +15,11 @@ const MultipleLiveStreaming = () => {
           width="100%"
           alt=" camera 2"
         />
+        <img
+          src={"http://127.0.0.1:5000/video_feed/2/"}
+          width="100%"
+          alt=" camera 2"
+        />
       </div>
     </>
   );
