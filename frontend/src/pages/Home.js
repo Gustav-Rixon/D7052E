@@ -44,7 +44,7 @@ export default function Home() {
     async function fetchJWT() {
       setLoading(true); // set loading to true before making the request
       try {
-        const response = await fetch("/get_jwt", {
+        const response = await fetch("http://127.0.0.1:5000/get_jwt", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: jwt_decode_object.email }),

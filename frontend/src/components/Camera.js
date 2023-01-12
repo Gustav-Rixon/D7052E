@@ -16,7 +16,6 @@ const MultipleLiveStreaming = () => {
           alt=" camera 2"
         />
       </div>
-      <img src="{{ url_for('video_feed', id='2') }}" width="100%" alt="" />"
     </>
   );
 };

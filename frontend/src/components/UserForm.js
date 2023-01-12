@@ -15,7 +15,7 @@ try {
 
 // API code post to add user to whitelist
 const addUserToWhitelist = async (add) => {
-  const response = await fetch("/whitelist/add", {
+  const response = await fetch("http://127.0.0.1:5000/whitelist/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const addUserToWhitelist = async (add) => {
 
 // API code post to remove user from whitelist
 const removeUserFromWhitelist = async (remove) => {
-  const response = await fetch("/whitelist/remove", {
+  const response = await fetch("http://127.0.0.1:5000/whitelist/remove", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const removeUserFromWhitelist = async (remove) => {
 };
 
 const promoteUser = async (promote) => {
-  const response = await fetch("/whitelist/promote", {
+  const response = await fetch("http://127.0.0.1:5000/whitelist/promote", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const promoteUser = async (promote) => {
 };
 
 const demoteUser = async (demote) => {
-  const response = await fetch("/whitelist/demote", {
+  const response = await fetch("http://127.0.0.1:5000/whitelist/demote", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
