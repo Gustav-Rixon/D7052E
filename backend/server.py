@@ -6,18 +6,20 @@ app = Flask(__name__)
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 host_name  = socket.gethostname()
-host_ip = '130.240.155.243'
+host_ip = '192.168.1.2'
 print('HOST IP:',"host_ip")
 port = 8080
 socket_address = (host_ip,port)
 server_socket.bind(socket_address)
 server_socket.listen()
+clients = []
 print("Listening at",socket_address)
 
 def show_client(addr,client_socket):
 	try:
 		print('CLIENT {} CONNECTED!'.format(addr))
 		if client_socket: # if a client socket exists
+			clients.append(client_socket)
 			data = b""
 			payload_size = struct.calcsize("Q")
 			while True:
@@ -38,21 +40,37 @@ def show_client(addr,client_socket):
 				frame = buffer.tobytes()
 				yield (b'--frame\r\n'
                 	b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
-			#client_socket.close()
 	except Exception as e:
 		print(f"CLINET {addr} DISCONNECTED")
+		client_socket.close()
 		pass
+
+def disconnect(addr,client_socket):
+	print('CLIENT {} DISCONNECTED!'.format(addr))
+	if client_socket: client_socket.close()
+	pass
+
 
 
 @app.route('/video_feed/<string:id>/', methods=["GET"])
 def video_feed(id):
-    print(id)
     client_socket,addr = server_socket.accept()
+    print(addr)
+    print(client_socket)
     """Video streaming route."""
     return Response(show_client(addr,client_socket),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+    
+@app.route('/video_feed_terminate/<string:id>/', methods=["GET"])
+def video_feed_terminate(id):
+    print(clients)
+    print(len(clients))
+    target = clients[id]
+    target.close()
+    clients.remove(target)
+    return Response("tja")               
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=1337)
 
