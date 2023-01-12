@@ -18,7 +18,7 @@ sys.path.append(parent)
 # now we can import the module in the parent
 # directory.
 import tools
-
+import newpi
 
 
 
@@ -404,9 +404,8 @@ Adds a camera to the cameras.json file and returns you the given id of that came
 """
 @app.route('/camera/join/<string:ip>', methods=["GET"])
 def join(ip):
-    temp = newpi.Newpi()
-    test = temp.joinnet(ip)
-    return str(test)
+    temp = newpi.Newpi().joinnet(ip)
+    return str(temp)
 
 """
 /camera/name/<string:name>/<int:id>

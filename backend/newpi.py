@@ -29,6 +29,7 @@ class Newpi:
     
     #adds the ip to the json and assigns an id if it already exists it returns your old id if its new you get a new one
     def joinnet(self, ip):
+        
         with open("..//storage/cameras.json") as f:
             data = json.load(f)
         temp = self.idiplist(data)
@@ -63,5 +64,3 @@ class Newpi:
                         indent=4,  
                         separators=(',',': '))
             return id
-    
-#TODO behöver en endpoint som connectar detta med kameror sen behöver jag fixa camerakoden som connectar till detta.
