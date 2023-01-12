@@ -80,7 +80,7 @@ export default function Home() {
 
   sleep(2000).then(() => {
     if (jwt_api !== obj) {
-      //handleSignOut();
+      handleSignOut();
     }
   });
 

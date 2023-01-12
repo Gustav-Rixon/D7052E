@@ -5,8 +5,22 @@ import uuid
 import json
 import jwt
 import os
+import sys
+# getting the name of the directory
+# where the this file is present.
+current = os.path.dirname(os.path.realpath(__file__))
+# Getting the parent directory name
+# where the current directory is present.
+parent = os.path.dirname(current)
+# adding the parent directory to
+# the sys.path.
+sys.path.append(parent)
+# now we can import the module in the parent
+# directory.
 import tools
 import newpi
+
+
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://localhost:5000/*'])
@@ -390,9 +404,8 @@ Adds a camera to the cameras.json file and returns you the given id of that came
 """
 @app.route('/camera/join/<string:ip>', methods=["GET"])
 def join(ip):
-    temp = newpi.Newpi()
-    test = temp.joinnet(ip)
-    return str(test)
+    temp = newpi.Newpi().joinnet(ip)
+    return str(temp)
 
 """
 /camera/name/<string:name>/<int:id>

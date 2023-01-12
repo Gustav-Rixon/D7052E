@@ -9,7 +9,7 @@ class TestRPC:
 		else:
 			exit() #Should do som error handeling
 		client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		host_ip = '192.168.1.125'
+		host_ip = '130.240.154.36'
 
 		port = 8080
 		client_socket.connect((host_ip,port))
