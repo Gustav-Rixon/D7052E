@@ -65,7 +65,7 @@ def video_feed(id):
 def video_feed_terminate(id):
     print(clients)
     print(len(clients))
-    target = clients[id]
+    target = clients[int(id)]
     target.close()
     clients.remove(target)
     return Response("tja")               
