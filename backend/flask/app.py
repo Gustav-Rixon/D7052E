@@ -5,8 +5,22 @@ import uuid
 import json
 import jwt
 import os
-# setting path
-from  backend import newpi, tools
+import sys
+# getting the name of the directory
+# where the this file is present.
+current = os.path.dirname(os.path.realpath(__file__))
+# Getting the parent directory name
+# where the current directory is present.
+parent = os.path.dirname(current)
+# adding the parent directory to
+# the sys.path.
+sys.path.append(parent)
+# now we can import the module in the parent
+# directory.
+import tools
+
+
+
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://localhost:5000/*'])
