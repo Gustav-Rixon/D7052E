@@ -102,3 +102,14 @@ footer p {
   opacity: 0;
   transition: opacity 200ms ease-out;
 }
+
+/* Camera Streams */
+.CameraStreams {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+}
+
+.CameraStreams img {
+  width: 100%;
+}
