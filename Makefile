@@ -14,3 +14,8 @@ stop:
 flask:
 	cd backend/flask/ && python3 app.py
 
+buildpi:
+# cd Pi/ && mkdir Videos && pipinstall TODO
+
+startpi:
+	cd Pi/ && python main.py

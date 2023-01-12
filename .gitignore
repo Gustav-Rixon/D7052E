@@ -6,3 +6,4 @@ __pycache__/
 
 temp.txt
 frontend/src/components/test.js
+client_secrets.json
