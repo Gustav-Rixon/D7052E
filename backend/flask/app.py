@@ -20,7 +20,7 @@ sys.path.append(parent)
 import tools
 import newpi
 
-
+os.environ['FLASK_ENV'] = 'production'
 
 app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000', 'http://localhost:5000/*'])
@@ -418,4 +418,4 @@ def rename(id, name):
     return str(test)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

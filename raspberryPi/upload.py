@@ -20,12 +20,17 @@ class Upload:
         # Try to load the saved credentials
         gauth.LoadCredentialsFile("credentials.json")
 
-        # If the credentials are invalid or missing, run the OAuth2 flow
-        if gauth.access_token_expired:
-            gauth.Refresh()
-            
+
         if gauth.credentials is None:
+            # Authenticate if they're not there
             gauth.LocalWebserverAuth()
+        elif gauth.access_token_expired:
+            # Refresh them if expired
+            gauth.Refresh()
+        else:
+            # Initialize the saved creds
+            gauth.Authorize()
+            
         # Save the credentials for the next run
         gauth.SaveCredentialsFile("credentials.json")
 
@@ -39,6 +44,7 @@ class Upload:
             file_path = os.path.join(imagePath, filename)
             file = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": driveID}]})
             file.SetContentFile(file_path)
+            file_path = os.path.basename(imagePath)
             file.Upload()
             print(F'File ID: {file["id"]}') 
             

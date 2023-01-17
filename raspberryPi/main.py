@@ -52,10 +52,10 @@ class Main:
                 print(f"uploading")
                 upload_thread.start()
                 # Check status if home or not
-                mail_thread.join()
-                upload_thread.join()
-                self.delete_main.clear()
+                mail_thread.join(timeout=4)
+                upload_thread.join(timeout=4)
                 self.sensor_main.motion()
+                self.delete_main.clear()
 
 if __name__ == "__main__":
     main = Main()

@@ -32,10 +32,12 @@ class Camera:
         print("FÄRDIG!")
         
     # take picture    
-    def capture(self):
+    def capture(self, id):
         camera = picamera.PiCamera()
         camera.resolution = (640, 480)
-        camera.capture(str(id) +'__'+ datetime.now().strftime("%Y:%m:%d-%H:%M:%S")+'.jpg')
+        dt_string_pic = str(id) +'__'+ datetime.now().strftime("%Y:%m:%d-%H:%M:%S")
+        picPath = imagePath + f"/{dt_string_pic}.jpg"
+        camera.capture(picPath)
         camera.close()
         
         

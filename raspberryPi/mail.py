@@ -50,9 +50,6 @@ class Email:
                 newMessage.attach(part)
 
        # Send the message
-        print("PASSWORD THEN EMAIL")
-        print(Password)
-        print(Sender_Email)
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.login(Sender_Email, Password)
         server.sendmail(Sender_Email, Reciever_Email, newMessage.as_string())
